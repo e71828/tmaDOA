@@ -29,17 +29,17 @@ end
 load ('PassiveSensorManeuveringTrajectory.mat','wp','time');
 
 % Use |waypointTrajectory| to mount the trajectory on the ownship
-ownship.Trajectory = waypointTrajectory(wp,time,'Orientation',...
+ownship.Trajectory = waypointTrajectory(wp/10,time,'Orientation',...
     repmat(quaternion([0 0 0],'rotvecd'),[901 1]));
 
 % The target is moving at a constant velocity and the trajectory can be
 % defined using |kinematicTrajectory|
-target.Trajectory = kinematicTrajectory('Position',[7e4 2e3 -10e3],...
-    'Velocity',[-500/3 -50/3 0]);
+target.Trajectory = kinematicTrajectory('Position',[7e4 2e3 -10e3]/10,...
+    'Velocity',[-500/3 -50/3 0]/10);
 
 if numTargets == 2
-    target2.Trajectory = kinematicTrajectory('Position',[5e4 -15e3 -10e3],...
-        'Velocity',[-500/3 100/3 0]);
+    target2.Trajectory = kinematicTrajectory('Position',[5e4 -15e3 -10e3]/10,...
+        'Velocity',[-500/3 100/3 0]/10);
 end
 
 % Create an IR signature for the target.
@@ -72,7 +72,7 @@ end
 grabFigureFcn = @(fig,scene)helperGrabPassiveRangingDisplay(fig,scene,str);
 
 % Create a theater display
-theaterDisplay = helperPassiveRangingDisplay(scene,'XLim',[0 100],'YLim',[-50 50],...
+theaterDisplay = helperPassiveRangingDisplay(scene,'XLim',[0 10],'YLim',[-5 5],...
     'PlotErrorMetrics',true,'PlotSigmaBounds',true,'GrabFigureFcn',grabFigureFcn);
 
 end

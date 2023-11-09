@@ -63,8 +63,8 @@ switch snapNum
     case 1
         % High range covariance in CartEKF.
         snapshot1 = copy(fig.Children(5));
-        xlim(snapshot1,[0 100]);
-        ylim(snapshot1,[0 3]);
+        xlim(snapshot1,[0 10]);
+        ylim(snapshot1,[0 0.3]);
         snapshot1.DataAspectRatioMode = 'auto';
         snapshot1.Position = [0.1300    0.1100    0.7750    0.8150];
         figures = {snapshot1};
@@ -83,8 +83,8 @@ switch snapNum
             'String',{'Covariance collapsed','before maneuver'},...
             'FitBoxToText','on','FontWeight','bold','FontSize',8);
         annPane = findall(fig,'Type','AnnotationPane');
-        fig.Children(5).XLim = [35 75];
-        fig.Children(5).YLim = [0 2];
+        fig.Children(5).XLim = [0 10];
+        fig.Children(5).YLim = [-5 5];
         fig.Children(5).DataAspectRatioMode = 'auto';
         toCopyObjects = [fig.Children;annPane];
 
@@ -104,7 +104,7 @@ switch snapNum
         fig.Children(3).YLimMode = 'auto';
         l = fig.Children(3).Legend;
         l.AutoUpdate = 'off';
-        text(fig.Children(3),45,-5,'Slow convergence','FontWeight','bold');
+        text(fig.Children(3),4.5,-0.5,'Slow convergence','FontWeight','bold');
         snapshot = copy(fig.Children);
         figures = {snapshot};
         
@@ -115,7 +115,7 @@ switch snapNum
             'String',{'Covariance maintenance', 'before maneuver'},...
             'FitBoxToText','on','FontSize',8,'FontWeight','bold');
         annPane = findall(fig,'Type','AnnotationPane');
-        fig.Children(3).YLim = [-90 90];
+        fig.Children(3).YLim = [-9 9];
         toCopyObjects = [annPane;fig.Children];
 
         snapshot1 = copy(toCopyObjects);

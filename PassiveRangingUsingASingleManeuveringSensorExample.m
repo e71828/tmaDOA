@@ -139,11 +139,13 @@ helperRunPassiveRangingSimulation(scene,theaterDisplay,@initCartesianEKF);
 % state and so does the zero-error line in the range estimation plot.
 
 showGrabs(theaterDisplay,3);
+keyboard;
 
 %%
 % Because the filter remains confident about it estimate of the range, it
 % takes much longer to converge closer to actual range values.
 showGrabs(theaterDisplay,4);
+keyboard;
 
 %% Track Using an EKF in Modified Spherical Coordinates (MSC-EKF)
 % The modified spherical coordinates (MSC) present a stable coordinate
@@ -232,18 +234,21 @@ while advance(scene)
     theaterDisplay.NonLinearStateInput = currentPose.Position(:);
     theaterDisplay(detections,tracks,tracker);
 end
+keyboard;
 
 %%
 % The MSC-EKF tries to maintain the covariance in range till the sensor has
 % not made a maneuver. This is essentially due to decoupled observable and
 % unobservable parts in the state.
 showGrabs(theaterDisplay,5);
+keyboard;
 
 %%
 % The filter converges closer to true values faster than the EKF in
 % Cartesian coordinates and the $\sigma$ bounds provide a true, unbiased
 % estimate of the error.
 showGrabs(theaterDisplay,6);
+keyboard;
 
 %% Track Using a Range-Parameterized MSC-EKF
 % The MSC-EKF approach uses linearization techniques to project covariances
@@ -325,6 +330,7 @@ while advance(scene)
     theaterDisplay.NonLinearStateInput = currentPose.Position(:);
     theaterDisplay(detections,tracks,tracker);
 end
+keyboard;
 
 %%
 % The following figures show the range-parameterized filter after track is
@@ -340,9 +346,12 @@ end
 % in range. The estimation error was about 5 km for the range-parametrized
 % filter.
 showGrabs(theaterDisplay,[7 8]);
+keyboard;
+
 %%
 % Close displays
 showGrabs(theaterDisplay,[]);
+keyboard;
 
 %% Multi-Target Scenarios
 % The demonstrated approach using MSC-EKF and range-parameterized MSC-EKF
@@ -362,11 +371,13 @@ rng(2015);
 
 % Use the helper function to run the simulation using @initMSCEKF.
 helperRunPassiveRangingSimulation(sceneTwo,theaterDisplayTwo,@initMSCEKF);
+keyboard;
 
 %%
 
 % Show results
 showGrabs(theaterDisplayTwo,1);
+keyboard;
 
 %%
 % Range-parameterized MSC-EKF
@@ -377,11 +388,13 @@ release(theaterDisplayTwo);
 
 % Run the simulation using range-parameterized MSC-EKF
 helperRunPassiveRangingSimulation(sceneTwo,theaterDisplayTwo,@initMSCRPEKF);
+keyboard;
 
 %%
 
 % Show results
 showGrabs(theaterDisplayTwo,2);
+keyboard;
 
 %% Summary
 % This example illustrates the challenges associated with single-sensor
@@ -404,8 +417,8 @@ showGrabs(theaterDisplayTwo,2);
 function filter = initCartesianEKF(detection)
 
 % Create a full detection with high covariance in range estimate.
-rangeEstimate = 5e4;
-rangeCov = 16e8;
+rangeEstimate = 5e3;
+rangeCov = 16e6;
 fullDetection = detection;
 fullDetection.Measurement = [fullDetection.Measurement;rangeEstimate];
 fullDetection.MeasurementNoise = blkdiag(fullDetection.MeasurementNoise,rangeCov);
@@ -422,7 +435,7 @@ fullFilter = initcvekf(fullDetection);
 % the velocity covariance with 400 i.e. an equivalent velocity standard
 % deviation of 200 m/s
 velCov = fullFilter.StateCovariance(2:2:end,2:2:end);
-fullFilter.StateCovariance(2:2:end,2:2:end) = 400*velCov;
+fullFilter.StateCovariance(2:2:end,2:2:end) = 4*velCov; %(20 m/s)^2
 
 % fullFilter can only be corrected with [az el r] measurements.
 % Create a |trackingEKF| using the State and StateCovariance from
@@ -444,8 +457,8 @@ end
 function filter = initMSCEKF(detection)
 % Use the second input of the |initcvmscekf| function to provide an
 % estimate of range and standard deviation in range.
-rangeEstimate = 5e4;
-rangeSigma = 4e4;
+rangeEstimate = 5e3;
+rangeSigma = 4e2;
 filter = initcvmscekf(detection,[rangeEstimate,rangeSigma]);
 % The initcvmscekf assumes a velocity standard deviation of 10 m/s, which
 % is linearly transformed into azimuth rate, elevation rate and vr/r.
@@ -464,8 +477,8 @@ function filter = initMSCRPEKF(detection)
 % (trackingGSF) containing multiple |trackingMSCEKF| as TrackingFilters.
 
 % Range-parametrization constants
-rMin = 3e4;
-rMax = 8e4;
+rMin = 3e3;
+rMax = 8e3;
 numFilters = 10;
 rho = (rMax/rMin)^(1/numFilters);
 Cr = 2*(rho - 1)/(rho + 1)/sqrt(12);
